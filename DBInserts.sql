@@ -28,5 +28,15 @@ SELECT * FROM transactionSubTypes;
 
 SELECT * FROM roles;
 
+SELECT * FROM logTypes;
+SELECT * FROM logSources;
+SELECT * FROM logSeverity;
+
+SELECT * FROM permissions;
+SELECT * FROM rolePermissions;
+
+SELECT * FROM authPlatforms;
+SELECT * FROM apps;
+
 
 

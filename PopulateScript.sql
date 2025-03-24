@@ -138,3 +138,87 @@ INSERT INTO `paymentAssistant`.`roles` (`roleName`) VALUES
     ('PRO User'),
     ('Support'),
     ('Auditor');
+    
+INSERT INTO `paymentAssistant`.`permissions` (`description`) VALUES
+    ('create_payment'),
+    ('view_payment'),
+    ('edit_payment'),
+    ('delete_payment'),
+    ('create_transfer'),
+    ('view_transfer'),
+    ('edit_transfer'),
+    ('delete_transfer'),
+    ('manage_subscriptions'),
+    ('manage_users'),
+    ('view_reports'),
+    ('manage_settings');
+    
+    -- Admin has all permissions
+INSERT INTO `paymentAssistant`.`rolePermissions` (`enabled`, `deleted`, `lastUpdate`, `usename`, `checksum`, `roleID`, `permissionID`)
+    SELECT 1, 0, NOW(), 'system', UNHEX(SHA2(CONCAT(1, p.permissionID), 256)), 1, p.permissionID
+    FROM `paymentAssistant`.`permissions` p;
+    
+-- User has basic permissions
+INSERT INTO `paymentAssistant`.`rolePermissions` (`enabled`, `deleted`, `lastUpdate`, `usename`, `checksum`, `roleID`, `permissionID`) VALUES
+    (1, 0, NOW(), 'system', UNHEX(SHA2('2-1', 256)), 2, 1),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('2-2', 256)), 2, 2),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('2-5', 256)), 2, 5),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('2-6', 256)), 2, 6),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('2-9', 256)), 2, 9);
+    
+    -- Premium User has additional permissions
+INSERT INTO `paymentAssistant`.`rolePermissions` (`enabled`, `deleted`, `lastUpdate`, `usename`, `checksum`, `roleID`, `permissionID`) VALUES
+    (1, 0, NOW(), 'system', UNHEX(SHA2('3-1', 256)), 3, 1),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('3-2', 256)), 3, 2),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('3-3', 256)), 3, 3),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('3-5', 256)), 3, 5),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('3-6', 256)), 3, 6),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('3-9', 256)), 3, 9),
+    (1, 0, NOW(), 'system', UNHEX(SHA2('3-11', 256)), 3, 11);
+    
+    -- PRO User has all user permissions
+INSERT INTO `paymentAssistant`.`rolePermissions` (`enabled`, `deleted`, `lastUpdate`, `usename`, `checksum`, `roleID`, `permissionID`)
+    SELECT 1, 0, NOW(), 'system', UNHEX(SHA2(CONCAT(4, p.permissionID), 256)), 4, p.permissionID
+    FROM `paymentAssistant`.`permissions` p
+    WHERE p.permissionID NOT IN (7, 8, 10, 12); -- Exclude some admin permissions
+    
+    
+    
+INSERT INTO `paymentAssistant`.`logTypes` (`name`, `description`) VALUES
+    ('Payment', 'Logs related to payment processing'),
+    ('Security', 'Logs related to security events'),
+    ('System', 'System operational logs'),
+    ('User', 'User activity logs'),
+    ('API', 'API call logs');
+    
+
+INSERT INTO `paymentAssistant`.`logSources` (`logNameIdentifier`, `description`) VALUES
+    ('PaymentProcessor', 'Payment processing system'),
+    ('AuthService', 'Authentication service'),
+    ('UserService', 'User management service'),
+    ('APIGateway', 'API gateway service'),
+    ('Database', 'Database operations');
+    
+
+INSERT INTO `paymentAssistant`.`logSeverity` (`name`, `severityLevel`, `description`) VALUES
+    ('Info', 1, 'Informational messages'),
+    ('Warning', 2, 'Potential issues'),
+    ('Error', 3, 'Errors that need attention'),
+    ('Critical', 4, 'Critical system failures'),
+    ('Security', 5, 'Security-related events');
+    
+    
+INSERT INTO `paymentAssistant`.`authPlatforms` (`name`, `secretKey`, `key`, `logoURL`) VALUES
+    ('Google', UNHEX(SHA2('google-secret-123', 256)), UNHEX(SHA2('google-key-123', 256)), 'https://logo.clearbit.com/google.com'),
+    ('Facebook', UNHEX(SHA2('facebook-secret-456', 256)), UNHEX(SHA2('facebook-key-456', 256)), 'https://logo.clearbit.com/facebook.com'),
+    ('Apple', UNHEX(SHA2('apple-secret-789', 256)), UNHEX(SHA2('apple-key-789', 256)), 'https://logo.clearbit.com/apple.com'),
+    ('Email', UNHEX(SHA2('email-secret-abc', 256)), UNHEX(SHA2('email-key-abc', 256)), NULL);
+    
+    -- ======================================================================
+    -- 18. Insert Apps
+    -- ======================================================================
+INSERT INTO `paymentAssistant`.`apps` (`name`, `description`, `createdAt`) VALUES
+    ('Payment Assistant', 'Main payment application', '2023-01-01'),
+    ('Admin Portal', 'Administration portal', '2023-01-01'),
+    ('Mobile App', 'Mobile application', '2023-01-01'),
+    ('API Service', 'Backend API service', '2023-01-01');
